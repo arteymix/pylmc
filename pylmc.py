@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 class LMC(object):
     """
     Implementation du little men computer.
@@ -101,7 +103,7 @@ if __name__ == '__main__':
                instruction = pieces[0]
 
             if len(pieces) == 2:
-                if LMC.instructions.has_key(pieces[0]): # instruction a gauche, adresse a droite
+                if pieces[0] in LMC.instructions: # instruction a gauche, adresse a droite
                     instruction, adresse = tuple(pieces)
                 else: # instruction a droite, label a gauche
                     label, instruction = tuple(pieces)
@@ -113,7 +115,7 @@ if __name__ == '__main__':
                 raise RuntimeError("")
 
             # Tests
-            if not LMC.instructions.has_key(instruction):
+            if instruction not in LMC.instructions:
                 raise RuntimeError("{} is not a valid instruction in line \n>>> {}".format(instruction, line))
              
             registres.append((instruction, adresse))
@@ -123,7 +125,7 @@ if __name__ == '__main__':
 
         # Traitements des labels
         for index, (instruction, adresse) in enumerate(registres):
-            if labels.has_key(adresse):
+            if adresse in labels:
                 registres[index] = (instruction, int(labels[adresse]))
             elif adresse is not None:
                 registres[index] = (instruction, int(adresse))
