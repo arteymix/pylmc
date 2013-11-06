@@ -4,10 +4,10 @@ begin IN
       STO sum
       SUB max
       BRP print # branch if sum >= max
-      BR begin
+      BR  begin
 print LDA sum
       OUT 
-      HLT # Fin du programme
+      HLT       # Fin du programme
 step  DAT 2
 sum   DAT 0
 max   DAT 5

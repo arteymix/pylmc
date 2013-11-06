@@ -6,7 +6,7 @@ class LMC(object):
     """
     def __init__(self, registres):
         """
-        registres --- liste de tuplets (instruction, registre)
+        registres --- liste de tuplets (instruction, adresse)
         """
         self.registres = registres
         self.accumulateur = 0
@@ -25,7 +25,12 @@ class LMC(object):
         self.accumulateur = valeur
 
     def STO(self, adresse):
-        self.registres[adresse] = ('DAT', self.accumulateur)
+        """
+        Stocke le contenu de l'accumulateur dans un registre
+        adresse --- adresse du registre
+        """
+        instruction, valeur = self.registres[adresse]
+        self.registres[adresse] = (instruction, self.accumulateur)
 
     def IN(self, adresse):
         self.accumulateur = int(input('<<< '))
@@ -123,11 +128,15 @@ if __name__ == '__main__':
             if label is not None:
                 labels[label] = len(registres) - 1
 
-        # Traitements des labels
+        # Traitements du programme
         for index, (instruction, adresse) in enumerate(registres):
+
             if adresse in labels:
-                registres[index] = (instruction, int(labels[adresse]))
-            elif adresse is not None:
-                registres[index] = (instruction, int(adresse))
+                adresse = labels[adresse]
+            
+            if adresse is not None: # Happens with IN, OUT, DATA
+                adresse = int(adresse)
+
+            registres[index] = (instruction, adresse)
 
     LMC(registres).run()
