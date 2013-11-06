@@ -1,27 +1,48 @@
 # Example of stack in LMC
- 
-HLT
 
-pop  LDA _pop  # we increment stack pointer for poping and pushing
+# Push values in the stack
+r0 DAT r0 # branch point
+   LDA r0 # we get here after the push 
+   STO pushr
+   IN 
+   BRZ r1 # 0 is a signal for outputting the stack
+   BR  push # otherwise, we keep pushing
+
+# Pop all values in the stack
+r1 LDA pop # look where we pop next
+   SUB top  # top of the stack
+   BRZ done # stack is empty
+   LDA r3 # where we go after the pop
+   STO popr
+   BR  pop
+r3 DAT r3   # branch point
+   OUT      # output top of the stack
+   BR r1    # pop again
+
+done HLT
+
+pop  LDA top  # pop the top of the stack
+     STO temp # top will be decremented, we store the value temporarly
+     LDA pop
      SUB step
-     STO _pop  # update pop top
+     STO pop  # update pop top
      STO _push # update push top
-_pop LDA top   # pop value from the stack
+     LDA temp  # pop value from the stack
+popr BR        
 
-push  STO temp # store the value to be pushed
+push  STO temp  # store the value to be pushed
       LDA _push
       ADD step
-      STO _pop  # update pop top
+      STO pop  # update pop top
       STO _push # update push top
       LDA temp  # reset accumulator
-_push STO top # push element at top of stack
-      LDA next
-      OUT
+_push STO top   # push element at top of stack
+pushr BR
 
-temp  DAT 0 # a temporary registery for holding a value while stack in incremented
-step  DAT 1 # how much top is incremented
-top   DAT 0 # stack starts here :P
-      DAT 0
+step  DAT 1
+temp  DAT
+top   DAT top # top of the stack, initially con
+      DAT 0 # stack starts here
       DAT 0
       DAT 0
       DAT 0

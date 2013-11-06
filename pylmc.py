@@ -4,11 +4,13 @@ class LMC(object):
     """
     Implementation du little men computer.
     """
-    def __init__(self, registres):
+    def __init__(self, registres, debug = False):
         """
         registres --- liste de tuplets (instruction, adresse)
+        debug     --- enable or disable debug output
         """
         self.registres = registres
+        self.debug = debug
         self.accumulateur = 0
         self.compteur = 0
 
@@ -75,8 +77,9 @@ class LMC(object):
         """
         # Execution du programme
         while True:
-            # print('compteur: {}, accumulateur: {}, registres: {}'.format(self.compteur, self.accumulateur, self.registres))
             instruction, adresse = self.registres[self.compteur]
+            if self.debug:
+                print("{}: {} {}".format(self.compteur, instruction, adresse))
             self.compteur += 1
             self.instructions[instruction](self, adresse)
 
@@ -87,7 +90,7 @@ if __name__ == '__main__':
     registres = []
    
     # Interpretation du programme
-    with open(sys.argv[1], 'r') as f:
+    with open(sys.argv[-1], 'r') as f:
             
         labels = {}
 
@@ -139,4 +142,4 @@ if __name__ == '__main__':
 
             registres[index] = (instruction, adresse)
 
-    LMC(registres).run()
+    LMC(registres, '--debug' in sys.argv).run()
